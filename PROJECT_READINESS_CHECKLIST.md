@@ -89,6 +89,27 @@ Must include:
    - Load unpacked `gmailcrm/extension`
    - Confirm: no “Manifest is invalid” errors.
 
+### Implementation Update (2026-02-24)
+- Implemented `gmailcrm/extension/manifest.json` with required MV3 fields:
+  - `name`, `version`, `manifest_version`
+  - `permissions` + `host_permissions`
+  - Gmail `content_scripts` mapping
+  - `action` popup config
+  - background service worker path
+  - `web_accessible_resources` entries for content/style assets
+- Added minimal referenced files so manifest resource paths resolve:
+  - `background/service-worker.js`
+  - `popup/popup.html`
+  - `content/*.js` placeholders
+  - `styles/sidebar.css`
+
+### Test Results (2026-02-24)
+- `cat gmailcrm/extension/manifest.json`
+  - Output: manifest contains all required Step 2.1 fields.
+- `node -e "JSON.parse(require('fs').readFileSync('gmailcrm/extension/manifest.json','utf8')); console.log('manifest json valid')"`
+  - Output: `manifest json valid`
+- Needs Human Confirmation – Chrome `chrome://extensions` unpacked-load validation was not executed in this environment.
+
 ---
 
 ## 3) Gmail Injector + Sidebar/Compose Hooks
@@ -326,7 +347,7 @@ Must include:
 ## Execution Tracker (fill habang gumagawa)
 
 - [x] Step 1 Monorepo scaffold complete
-- [ ] Step 2 Manifest valid and extension loads
+- [ ] Step 2 Manifest valid and extension loads — Needs Human Confirmation – Unpacked extension load in Chrome UI not yet validated – validated by: Codex static checks – 2026-02-24
 - [ ] Step 3 Gmail injector + sidebar/compose working
 - [ ] Step 4 Backend + DB health verified
 - [ ] Step 5 CRUD + tracking endpoints verified

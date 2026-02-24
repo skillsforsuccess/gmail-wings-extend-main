@@ -1,0 +1,39 @@
+{
+  "name": "GmailCRM",
+  "description": "CRM workflows embedded in Gmail.",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "permissions": ["storage", "identity", "scripting", "activeTab"],
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "http://localhost:3001/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content/gmail-injector.js"],
+      "css": ["styles/sidebar.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "GmailCRM",
+    "default_popup": "popup/popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "styles/sidebar.css",
+        "content/sidebar.js",
+        "content/compose-toolbar.js",
+        "content/mail-merge.js",
+        "content/tracker-injector.js"
+      ],
+      "matches": ["https://mail.google.com/*"]
+    }
+  ]
+}
