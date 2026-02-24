@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 214 32% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 214 32% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 214 32% 15%;
+
+    --primary: 217 89% 51%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 214 20% 94%;
+    --secondary-foreground: 214 32% 25%;
+
+    --muted: 214 18% 96%;
+    --muted-foreground: 214 12% 50%;
+
+    --accent: 217 89% 96%;
+    --accent-foreground: 217 89% 40%;
+
+    --destructive: 4 90% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --stage-lead: 217 89% 51%;
+    --stage-contacted: 262 52% 56%;
+    --stage-proposal: 38 92% 50%;
+    --stage-negotiation: 24 95% 53%;
+    --stage-won: 142 71% 45%;
+    --stage-lost: 4 90% 58%;
+
+    --border: 214 20% 90%;
+    --input: 214 20% 90%;
+    --ring: 217 89% 51%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 214 32% 15%;
+    --sidebar-foreground: 214 12% 80%;
+    --sidebar-primary: 217 89% 61%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 214 32% 20%;
+    --sidebar-accent-foreground: 214 12% 90%;
+    --sidebar-border: 214 25% 22%;
+    --sidebar-ring: 217 89% 61%;
+
+    --chart-bar: 217 89% 51%;
+    --chart-bar-secondary: 217 89% 75%;
+  }
+
+  .dark {
+    --background: 214 32% 8%;
+    --foreground: 210 20% 95%;
+    --card: 214 32% 12%;
+    --card-foreground: 210 20% 95%;
+    --popover: 214 32% 12%;
+    --popover-foreground: 210 20% 95%;
+    --primary: 217 89% 61%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 25% 18%;
+    --secondary-foreground: 210 20% 85%;
+    --muted: 214 25% 15%;
+    --muted-foreground: 214 12% 55%;
+    --accent: 217 60% 18%;
+    --accent-foreground: 217 89% 70%;
+    --destructive: 4 90% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 25% 20%;
+    --input: 214 25% 20%;
+    --ring: 217 89% 61%;
+    --sidebar-background: 214 35% 6%;
+    --sidebar-foreground: 214 12% 75%;
+    --sidebar-primary: 217 89% 61%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 214 32% 12%;
+    --sidebar-accent-foreground: 214 12% 85%;
+    --sidebar-border: 214 25% 15%;
+    --sidebar-ring: 217 89% 61%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .stage-badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .stage-badge-lead {
+    background-color: hsl(var(--stage-lead) / 0.12);
+    color: hsl(var(--stage-lead));
+  }
+  .stage-badge-contacted {
+    background-color: hsl(var(--stage-contacted) / 0.12);
+    color: hsl(var(--stage-contacted));
+  }
+  .stage-badge-proposal {
+    background-color: hsl(var(--stage-proposal) / 0.12);
+    color: hsl(var(--stage-proposal));
+  }
+  .stage-badge-negotiation {
+    background-color: hsl(var(--stage-negotiation) / 0.12);
+    color: hsl(var(--stage-negotiation));
+  }
+  .stage-badge-won {
+    background-color: hsl(var(--stage-won) / 0.12);
+    color: hsl(var(--stage-won));
+  }
+  .stage-badge-lost {
+    background-color: hsl(var(--stage-lost) / 0.12);
+    color: hsl(var(--stage-lost));
+  }
+
+  .kanban-column {
+    @apply flex flex-col rounded-lg min-w-[280px] max-w-[320px] flex-shrink-0;
+    background-color: hsl(var(--muted) / 0.5);
+  }
+
+  .deal-card {
+    @apply bg-card rounded-lg border shadow-sm p-3 cursor-grab active:cursor-grabbing transition-all duration-150;
+  }
+
+  .deal-card:hover {
+    @apply shadow-md;
+    transform: translateY(-1px);
+  }
+
+  .deal-card.dragging {
+    @apply opacity-50 shadow-lg;
+    transform: rotate(2deg);
+  }
+
+  .bar-chart-bar {
+    @apply rounded-t transition-all duration-500 ease-out;
+    background-color: hsl(var(--chart-bar));
+  }
+
+  .bar-chart-bar:hover {
+    background-color: hsl(var(--chart-bar-secondary));
+  }
+
+  .nav-link {
+    @apply flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .nav-link:hover {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  .nav-link.active {
+    background-color: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
