@@ -347,7 +347,10 @@ Must include:
 ## Execution Tracker (fill habang gumagawa)
 
 - [x] Step 1 Monorepo scaffold complete
-- [ ] Step 2 Manifest valid and extension loads — Needs Human Confirmation – Unpacked extension load in Chrome UI not yet validated – validated by: Codex static checks – 2026-02-24
+- [x] Step 2 Manifest valid and extension loads —
+Validated by: Frederick
+Date: 2026-02-27
+Evidence: No manifest errors on unpacked load; service worker logs "GmailCRM service worker installed"; content script logs "GmailCRM content script injected → https://mail.google.com/..."; popup opens showing "GmailCRM Extension is installed"
 - [ ] Step 3 Gmail injector + sidebar/compose working
 - [ ] Step 4 Backend + DB health verified
 - [ ] Step 5 CRUD + tracking endpoints verified
