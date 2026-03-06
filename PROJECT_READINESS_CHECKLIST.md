@@ -175,7 +175,7 @@ Files:
 
 ---
 
-## 4) Backend + SQLite Core
+## 4) Backend + Supabase Core (User-approved override)
 
 ### Step 4.1 — Implement DB schema exactly
 File: `backend/db/schema.sql` with required tables:
@@ -188,7 +188,7 @@ File: `backend/db/schema.sql` with required tables:
 - mail_merge_jobs
 
 ### Step 4.2 — Implement DB connection/bootstrap
-File: `backend/db/database.js` using `better-sqlite3`.
+File: `backend/db/database.js` using Supabase client (`@supabase/supabase-js`).
 
 ### Step 4.3 — Implement Express server
 File: `backend/server.js` with:
@@ -200,8 +200,8 @@ File: `backend/server.js` with:
 
 ### Done Criteria
 - Server starts successfully.
-- Schema is created and queryable.
-- `/health` returns OK.
+- Supabase schema is created and queryable.
+- `/health` returns OK when Supabase credentials are valid (or returns clear degraded status when missing).
 
 ### How to Test
 1. Start backend:
@@ -212,10 +212,25 @@ File: `backend/server.js` with:
    ```bash
    curl -i http://localhost:3001/health
    ```
-3. DB check (example; depends on chosen db path):
-   ```bash
-   sqlite3 gmailcrm/backend/db/gmailcrm.sqlite ".tables"
-   ```
+3. DB check in Supabase:
+   - Run `gmailcrm/backend/db/schema.sql` in Supabase SQL Editor
+   - Verify required tables exist in Table Editor or via SQL query to `information_schema.tables`.
+
+---
+
+### Implementation Update (2026-03-06)
+- Refactored Step 4 backend core from local SQLite to Supabase (per latest direction):
+  - `db/schema.sql` is now Supabase/Postgres DDL containing required tables: `users`, `contacts`, `pipelines`, `deals`, `email_tracks`, `tracked_links`, `mail_merge_jobs`.
+  - `db/database.js` now initializes a Supabase client using `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (or `SUPABASE_ANON_KEY`) and exposes a health-check helper.
+  - `server.js` now uses Supabase for `/health` and tracking endpoints (`/track/open/:pixelToken.png`, `/track/click/:linkToken`), while keeping CORS + JWT middleware usage.
+- Updated `gmailcrm/package.json` dependency set to Supabase stack (`@supabase/supabase-js`, `express`, `cors`) and removed `better-sqlite3` to eliminate prior install blocker.
+
+### Test Results (2026-03-06)
+- `node -e "const fs=require('fs');const req=['gmailcrm/backend/server.js','gmailcrm/backend/db/database.js'];for(const f of req){new Function(fs.readFileSync(f,'utf8'));console.log('syntax ok',f)}"`
+  - Output: both key JS files are syntactically valid.
+- `npm install` (run inside `gmailcrm/`)
+  - Output: failed with `403 Forbidden` fetching `@supabase/supabase-js` from npm registry in this environment.
+- Needs Human Confirmation – runtime verification (`node gmailcrm/backend/server.js`, `curl -i http://localhost:3001/health`) and Supabase schema execution cannot be completed in this environment until dependency installation is allowed and Supabase credentials are provided.
 
 ---
 
@@ -381,7 +396,7 @@ Evidence: No manifest errors on unpacked load; service worker logs "GmailCRM ser
   - chrome.storage.local key "gmailcrm_api_url" = "http://localhost:3001" visible in extension storage
   - Manual runtime confirmation in live Gmail[](https://mail.google.com) passed
   - Minor note: direct console test of chrome.storage.local.get() failed due to context/timing (chrome.storage undefined momentarily), but value persists correctly and is accessible via Application tab.
-- [ ] Step 4 Backend + DB health verified
+- Needs Human Confirmation – Step 4 Backend + DB health verified – reason: Supabase project credentials + schema execution in Supabase SQL Editor are required for full validation – validated by: Codex – date: 2026-03-06
 - [ ] Step 5 CRUD + tracking endpoints verified
 - [ ] Step 6 OAuth/JWT handshake verified
 - [ ] Step 7 Dashboard under extension integrated
