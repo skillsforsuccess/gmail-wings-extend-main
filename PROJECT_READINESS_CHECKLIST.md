@@ -151,6 +151,28 @@ Files:
    chrome.storage.local.get('gmailcrm_api_url', console.log)
    ```
 
+### Implementation Update (2026-02-27)
+- Replaced placeholder content scripts with functional Step 3 implementation:
+  - `gmail-injector.js` now waits for Gmail navigation root (`[role="navigation"]`), initializes `chrome.storage.local` key `gmailcrm_api_url` with default `http://localhost:3001`, dynamically loads step modules, and watches Gmail DOM mutations via `MutationObserver`.
+  - `sidebar.js` now detects likely Gmail thread containers with fallback selectors and mounts a CRM sidebar panel once per thread container.
+  - `compose-toolbar.js` now detects compose editors with fallback selectors and injects CRM action buttons once per compose surface.
+  - `mail-merge.js` and `tracker-injector.js` now wire compose buttons for mail-merge/tracking placeholders to prove hook wiring path.
+- Result: static implementation requirements for Step 3.1 and Step 3.2 are in place.
+
+### Test Results (2026-02-27)
+- `ls gmailcrm/extension/content`
+  - Output confirms all required files exist:
+    - `gmail-injector.js`
+    - `sidebar.js`
+    - `compose-toolbar.js`
+    - `mail-merge.js`
+    - `tracker-injector.js`
+- `rg -n "role=\"navigation\"|MutationObserver|chrome.storage.local|gmailcrm_api_url|localhost:3001|attachSidebarToThreads|attachComposeToolbar" gmailcrm/extension/content/gmail-injector.js`
+  - Output confirms required Step 3.1 implementation markers are present in injector logic.
+- `node --experimental-vm-modules -e "const fs=require('fs');const vm=require('vm');const files=['gmailcrm/extension/content/gmail-injector.js','gmailcrm/extension/content/sidebar.js','gmailcrm/extension/content/compose-toolbar.js','gmailcrm/extension/content/mail-merge.js','gmailcrm/extension/content/tracker-injector.js'];for(const f of files){new vm.SourceTextModule(fs.readFileSync(f,'utf8'));console.log('parsed',f)}"`
+  - Output: all Step 3 script files parsed successfully.
+- Needs Human Confirmation – Gmail runtime behavior (actual sidebar rendering, compose button visibility, and `chrome.storage.local` value check in Gmail tab) requires Chrome extension execution against live `https://mail.google.com`.
+
 ---
 
 ## 4) Backend + SQLite Core
@@ -352,6 +374,7 @@ Validated by: Frederick
 Date: 2026-02-27
 Evidence: No manifest errors on unpacked load; service worker logs "GmailCRM service worker installed"; content script logs "GmailCRM content script injected → https://mail.google.com/..."; popup opens showing "GmailCRM Extension is installed"
 - [ ] Step 3 Gmail injector + sidebar/compose working
+Needs Human Confirmation – Gmail thread/compose runtime checks pending in Chrome on live Gmail – validated by: Codex (static checks only) – date: 2026-02-27
 - [ ] Step 4 Backend + DB health verified
 - [ ] Step 5 CRUD + tracking endpoints verified
 - [ ] Step 6 OAuth/JWT handshake verified
