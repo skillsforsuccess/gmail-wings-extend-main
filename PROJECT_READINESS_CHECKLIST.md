@@ -373,8 +373,14 @@ Must include:
 Validated by: Frederick
 Date: 2026-02-27
 Evidence: No manifest errors on unpacked load; service worker logs "GmailCRM service worker installed"; content script logs "GmailCRM content script injected → https://mail.google.com/..."; popup opens showing "GmailCRM Extension is installed"
-- [ ] Step 3 Gmail injector + sidebar/compose working
-Needs Human Confirmation – Gmail thread/compose runtime checks pending in Chrome on live Gmail – validated by: Codex (static checks only) – date: 2026-02-27
+- [x] Step 3 Gmail injector + sidebar/compose working
+  Validated by: Frederick – date: 2026-03-06
+  Notes: 
+  - Sidebar mounts correctly in email threads ("CRM sidebar ready.")
+  - CRM buttons ("Add to CRM", "Track Email", "Mail Merge") appear in compose window
+  - chrome.storage.local key "gmailcrm_api_url" = "http://localhost:3001" visible in extension storage
+  - Manual runtime confirmation in live Gmail[](https://mail.google.com) passed
+  - Minor note: direct console test of chrome.storage.local.get() failed due to context/timing (chrome.storage undefined momentarily), but value persists correctly and is accessible via Application tab.
 - [ ] Step 4 Backend + DB health verified
 - [ ] Step 5 CRUD + tracking endpoints verified
 - [ ] Step 6 OAuth/JWT handshake verified
